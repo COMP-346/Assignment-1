@@ -156,8 +156,11 @@ public class Client {
          int i = 0;     /* index of transaction array */
          
          while (i < getNumberOfTransactions())
-         {  
-            // while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
+         {
+             /* Alternatively, busy-wait until the network input buffer is available */
+            while( objNetwork.getInBufferStatus().equals("full") ){
+                Thread.yield();
+            };
                                              	
             transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
            
@@ -180,8 +183,11 @@ public class Client {
          int i = 0;     /* Index of transaction array */
          
          while (i < getNumberOfTransactions())
-         {     
-        	 // while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
+         {
+             /* Alternatively, busy-wait until the network output buffer is available */
+             while( objNetwork.getOutBufferStatus().equals("empty")){
+                 Thread.yield();
+             };
                                                                         	
             objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
             
@@ -215,10 +221,6 @@ public class Client {
     
     	/* Implement here the code for the run method ... */
 
-        if(clientOperation.equals("sending")){
-            sendClientEndTime=System.currentTimeMillis();
-
-            
-        }
+        objNetwork.disconnect(objNetwork.getClientIP());
     }
 }
