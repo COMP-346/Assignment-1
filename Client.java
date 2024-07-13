@@ -1,7 +1,6 @@
 
+import java.io.*;
 import java.util.Scanner;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.InputMismatchException;
 
 /*
@@ -15,7 +14,7 @@ import java.util.InputMismatchException;
  * @author Kerly Titus
  */
 
-public class Client { 
+public class Client extends Thread{
     
     private static int numberOfTransactions;   		/* Number of transactions to process */
     private static int maxNbTransactions;      		/* Maximum number of transactions */
@@ -158,14 +157,14 @@ public class Client {
          while (i < getNumberOfTransactions())
          {
              /* Alternatively, busy-wait until the network input buffer is available */
-            while( objNetwork.getInBufferStatus().equals("full") ){
+            while(objNetwork.getInBufferStatus().equals("full") ){
                 Thread.yield();
             };
-                                             	
+
             transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
-           
+
             System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
-            
+
             objNetwork.send(transaction[i]);                            /* Transmit current transaction */
             i++;
          }
@@ -221,6 +220,22 @@ public class Client {
     
     	/* Implement here the code for the run method ... */
 
-        objNetwork.disconnect(objNetwork.getClientIP());
+        if(getClientOperation().equals("sending")){
+            sendClientStartTime=System.currentTimeMillis();
+            sendTransactions();
+            sendClientEndTime=System.currentTimeMillis();
+
+            System.out.println("\n Terminating client Sending thread - " + " Running time " + (sendClientEndTime - sendClientStartTime) + " milliseconds");
+        }
+
+        else if(getClientOperation().equals("receiving")){
+            receiveClientStartTime=System.currentTimeMillis();
+            receiveTransactions(transact);
+            receiveClientEndTime=System.currentTimeMillis();
+
+            System.out.println("\n Terminating client Receive thread - " + " Running time " + (receiveClientEndTime - receiveClientStartTime) + " milliseconds");
+            objNetwork.disconnect(objNetwork.getClientIP());
+        }
+
     }
 }

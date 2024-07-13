@@ -15,7 +15,7 @@ import java.util.InputMismatchException;
  * @author Kerly Titus
  */
 
-public class Server {
+public class Server extends Thread{
 
 	int numberOfTransactions;         /* Number of transactions handled by the server */
 	int numberOfAccounts;             /* Number of accounts stored in the server */
@@ -193,7 +193,7 @@ public class Server {
          while ((!objNetwork.getClientConnectionStatus().equals("disconnected"))) {
 
              /* Alternatively, busy-wait until the network input buffer is available */
-             while ((objNetwork.getInBufferStatus().equals("empty"))) {
+             while ((objNetwork.getInBufferStatus().equals("empty")) && objNetwork.getClientConnectionStatus().equals("connected")) {
                  Thread.yield();
              }
 
@@ -309,12 +309,16 @@ public class Server {
      */
     public void run()
     {   Transactions trans = new Transactions();
-    	long serverStartTime = 0, serverEndTime = 0;
 
     	System.out.println("\n DEBUG : Server.run() - starting server thread " + objNetwork.getServerConnectionStatus());
     	
     	/* Implement the code for the run method */
-        
+        long serverStartTime = System.currentTimeMillis(), serverEndTime = 0;
+
+        processTransactions(trans);
+
+        serverEndTime=System.currentTimeMillis();
+
         System.out.println("\n Terminating server thread - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
         
         objNetwork.disconnect(objNetwork.getServerIP());
