@@ -217,10 +217,12 @@ public class Client extends Thread{
     {   
     	Transactions transact = new Transactions();
     	long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
+
     
     	/* Implement here the code for the run method ... */
 
         if(getClientOperation().equals("sending")){
+            System.out.println("\n DEBUG : Client.run() - starting Sender Client thread");
             sendClientStartTime=System.currentTimeMillis();
             sendTransactions();
             sendClientEndTime=System.currentTimeMillis();
@@ -229,6 +231,7 @@ public class Client extends Thread{
         }
 
         else if(getClientOperation().equals("receiving")){
+            System.out.println("\n DEBUG : Client.run() - starting Client Receiver thread");
             receiveClientStartTime=System.currentTimeMillis();
             receiveTransactions(transact);
             receiveClientEndTime=System.currentTimeMillis();

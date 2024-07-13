@@ -23,4 +23,8 @@
 hs_err_pid*
 replay_pid*
 
+# Ignore build output directory
 out/
+
+# Ignore IntelliJ IDEA settings directory
+.idea/

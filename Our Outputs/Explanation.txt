@@ -1,0 +1,27 @@
+When the maxNbPackets is increased, both in inBuffer and outBuffer of the Network class will store more transactions.
+
+Therefore, there will be less CPU Yielding from the methods that need to access those buffers if they are: empty and full, for inBuffer and outBuffer respectively.
+
+Thus, increasing the size of these buffers, speeds up the processing time of the transactions and makes communication between Client and Server faster.
+
+-------------------------------------------------------------
+Case 1:
+maxNbPackets=10
+
+Send Thread Time = 53ms
+Receive Thread Time = 55ms
+Server Thread Time = 69ms
+
+Case 2:
+maxNbPackets=20
+
+Send Thread Time = 46ms
+Receive Thread Time = 48ms
+Server Thread Time = 63ms
+
+Case 3:
+maxNbPackets=100
+
+Send Thread Time = 7ms
+Receive Thread Time = 33ms
+Server Thread Time = 45ms
